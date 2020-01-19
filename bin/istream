@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const ping = require('../cmds/ping');
+
+program
+      .command("ping")
+      .alias('p')
+      .description('Check whether there is internet')
+      .action(ping);
+
+program.parse(process.argv)

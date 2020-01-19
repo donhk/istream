@@ -1,0 +1,17 @@
+{
+  "name": "istream",
+  "version": "1.0.0",
+  "description": "ONVIF RSTP client to backup streams into remote server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "donhk",
+  "license": "MIT",
+  "bin": {
+    "istream": "bin/istream"
+  },
+  "dependencies": {
+    "commander": "^4.1.0"
+  }
+}
