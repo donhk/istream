@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-const program = require('commander');
-const ping = require('../cmds/ping');
-const find = require('../cmds/find_cameras');
-const ss = require('../cmds/start_stream');
-
-let cameras = [];
+const program = require('commander')
+const ping = require('../cmds/ping')
+const find = require('../cmds/find_cameras')
+const ss = require('../cmds/start_stream')
+const fspace = require('../cmds/fs_space')
 
 program
       .command("ping")
@@ -24,5 +23,11 @@ program
       .alias('ss')
       .description('Start redirecting one RSTP stream onto a file using ffmpeg')
       .action(ss);
+
+program
+      .command("fs_space <path>")
+      .alias('fs')
+      .description('Shows space used by the videos')
+      .action(fspace.listDir);
 
 program.parse(process.argv);
