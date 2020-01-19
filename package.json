@@ -6,12 +6,18 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/donhk/istream.git"
+  },
   "author": "donhk",
   "license": "MIT",
   "bin": {
     "istream": "bin/istream"
   },
   "dependencies": {
-    "commander": "^4.1.0"
+    "commander": "^4.1.0",
+    "node-onvif": "^0.1.2",
+    "uniqid": "^4.1.1"
   }
 }

@@ -2,6 +2,7 @@
 
 const program = require('commander');
 const ping = require('../cmds/ping');
+const find = require('../cmds/find_cameras');
 
 program
       .command("ping")
@@ -9,4 +10,10 @@ program
       .description('Check whether there is internet')
       .action(ping);
 
-program.parse(process.argv)
+program
+      .command("find")
+      .alias('f')
+      .description('Find cameras on the local network')
+      .action(find);
+
+program.parse(process.argv);
