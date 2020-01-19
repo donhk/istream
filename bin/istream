@@ -3,6 +3,9 @@
 const program = require('commander');
 const ping = require('../cmds/ping');
 const find = require('../cmds/find_cameras');
+const ss = require('../cmds/start_stream');
+
+let cameras = [];
 
 program
       .command("ping")
@@ -15,5 +18,11 @@ program
       .alias('f')
       .description('Find cameras on the local network')
       .action(find);
+
+program
+      .command("start_stream <source> <destiny>")
+      .alias('ss')
+      .description('Start redirecting one RSTP stream onto a file using ffmpeg')
+      .action(ss);
 
 program.parse(process.argv);

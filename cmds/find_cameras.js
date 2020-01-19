@@ -18,17 +18,19 @@ function processDevice(info) {
     });
 }
 
-module.exports = function find_cameras(params) {
+module.exports = function () {
     console.log('finding cameras');
     onvif.startProbe().then((device_info_list) => {
-        console.log(device_info_list.length + ' devices will be initialized.');
+        console.log(device_info_list.length + ' devices found.');
         let requests = device_info_list.map((info) => {
             return processDevice(info);
         });
         Promise.all(requests).then(() => {
             console.log('returning cameras found ' + cameras.length);
+            return cameras;
         }).catch((error) => {
             console.error(error)
+            return [];
         });
     }).catch((error) => {
         console.error(error);
