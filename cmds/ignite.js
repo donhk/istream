@@ -38,7 +38,11 @@ module.exports = async function () {
                     logger.info(device.profile_list[0].stream.rtsp);
                     const stream_url = 'rtsp://admin:frederick27@' + device.profile_list[0].stream.rtsp.substring(7); // this needs to be known in advance
                     logger.info(stream_url);
-                    
+                    const storage_path = '/tmp/temfiles/';
+                    setInterval(() => {
+                        fspace.listDir(storage_path);
+                    }, 60000);
+                    ss(stream_url, storage_path);
                 });
             });
         }).catch((error) => {
