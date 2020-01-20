@@ -1,5 +1,14 @@
+const winston = require('winston');
 const fs = require('fs')
 const max_used_space = 15; //in MB
+
+const logger = winston.createLogger({
+    format: winston.format.simple(),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'fs_space.log' })
+    ]
+});
 
 module.exports = {
     listDir: (path) => {
@@ -14,18 +23,18 @@ module.exports = {
         sorted.forEach(file => {
             var filex = fs.statSync(path + file);
             used_space += (Math.round(filex.size / 1000000))
-            console.log(filex.ctime + ' location: ' + file);
+            logger.debug(filex.ctime + ' location: ' + file);
             filesWithStats.push({
                 filename: file,
                 date: new Date(filex.ctime),
                 path: path + file
             });
         });
-        console.log('used_space ' + used_space);
+        logger.info('used_space ' + used_space);
         if (used_space >= max_used_space) {
-            console.log('freeing space' + filesWithStats[0].path);
+            logger.info('freeing space ' + filesWithStats[0].path);
             fs.unlink(filesWithStats[0].path, () => {
-                console.log('file removed');
+                logger.info('file removed')
             });
         }
         return filesWithStats;

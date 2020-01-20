@@ -31,7 +31,7 @@ program
       .action((path) => {
             setInterval(() => {
                   fspace.listDir(path);
-            }, 10000)
+            }, 60000)
       });
 
 program.parse(process.argv);
