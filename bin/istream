@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-const program = require('commander')
-const ping = require('../cmds/ping')
-const find = require('../cmds/find_cameras')
-const ss = require('../cmds/start_stream')
-const fspace = require('../cmds/fs_space')
+const program = require('commander');
+const ping = require('../cmds/ping');
+const find = require('../cmds/find_cameras');
+const ss = require('../cmds/start_stream');
+const fspace = require('../cmds/fs_space');
+const ignite = require('../cmds/ignite');
 
 program
       .command("ping")
@@ -33,5 +34,11 @@ program
                   fspace.listDir(path);
             }, 60000)
       });
+
+program
+      .command("ignite")
+      .alias('i')
+      .description('Start the main workflow')
+      .action(ignite);
 
 program.parse(process.argv);

@@ -16,6 +16,7 @@
     "istream": "bin/istream"
   },
   "dependencies": {
+    "wait-until": "^0.0.2",
     "commander": "^4.1.0",
     "node-onvif": "^0.1.2",
     "uniqid": "^4.1.1",
