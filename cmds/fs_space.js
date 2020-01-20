@@ -1,6 +1,5 @@
 const winston = require('winston');
 const fs = require('fs')
-const max_used_space = 15; //in MB
 
 const logger = winston.createLogger({
     format: winston.format.simple(),
@@ -11,7 +10,7 @@ const logger = winston.createLogger({
 });
 
 module.exports = {
-    listDir: (path) => {
+    listDir: (path, max_used_space) => {
         let files = fs.readdirSync(path); // You can also use the async method
         let filesWithStats = [];
         let sorted = files.sort((a, b) => {

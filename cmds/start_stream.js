@@ -9,7 +9,7 @@ const logger = winston.createLogger({
     ]
 });
 
-async function execute(source, destiny) {
+async function execute(source, destiny, segment_duration) {
     const cmd = `
         ffmpeg \
         -i ${source}\
@@ -17,24 +17,25 @@ async function execute(source, destiny) {
         -c:a pcm_alaw \
         -flags +global_header \
         -f segment \
-        -segment_time 60 \
+        -segment_time ${segment_duration} \
         -segment_format_options movflags=+faststart \
         -segment_list_flags live \
         -reset_timestamps 1 \
-        -strftime 1 "${destiny}/%Y-%m-%d_%H-%M-%S_output.mov"
+        -strftime 1 "${destiny}_%Y-%m-%d_%H-%M-%S_output.mov"
     `;
     logger.info('ffmpeg started');
+    logger.info(cmd);
     await exec(cmd, { maxBuffer: (1024 * 1024 * 100) }, (error, stdout, stderr) => {
         if (error) {
             logger.error(stderr);
             logger.info('retrying execution');
-            execute(source, destiny);
+            execute(source, destiny, segment_duration);
             return;
         }
         logger.info(stdout);
     });
 };
 
-module.exports = function (source, destiny) {
-    execute(source, destiny);
+module.exports = function (source, destiny, segment_duration) {
+    execute(source, destiny, segment_duration);
 };

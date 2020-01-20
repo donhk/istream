@@ -20,19 +20,19 @@ program
       .action(find);
 
 program
-      .command("start_stream <source> <destiny>")
+      .command("start_stream <source> <destiny> <segment_time>")
       .alias('ss')
       .description('Start redirecting one RSTP stream onto a file using ffmpeg')
       .action(ss);
 
 program
-      .command("fs_space <path>")
+      .command("fs_space <path> <max_used_space>")
       .alias('fs')
       .description('Shows space used by the videos')
-      .action((path) => {
+      .action((path, max_used_space) => {
             setInterval(() => {
-                  fspace.listDir(path);
-            }, 60000)
+                  fspace.listDir(path, max_used_space);
+            }, 10000);
       });
 
 program
