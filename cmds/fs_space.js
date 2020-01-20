@@ -1,5 +1,5 @@
 const fs = require('fs')
-const max_space_used = 15; //in MB
+const max_used_space = 15; //in MB
 
 module.exports = {
     listDir: (path) => {
@@ -10,10 +10,10 @@ module.exports = {
             let s2 = fs.statSync(path + b);
             return new Date(s1.ctime) - new Date(s2.ctime);
         });
-        let space_used = 0;
+        let used_space = 0;
         sorted.forEach(file => {
             var filex = fs.statSync(path + file);
-            space_used += (Math.round(filex.size / 1000000))
+            used_space += (Math.round(filex.size / 1000000))
             console.log(filex.ctime + ' location: ' + file);
             filesWithStats.push({
                 filename: file,
@@ -21,8 +21,8 @@ module.exports = {
                 path: path + file
             });
         });
-        console.log('space_used ' + space_used);
-        if (space_used >= max_space_used) {
+        console.log('used_space ' + used_space);
+        if (used_space >= max_used_space) {
             console.log('freeing space' + filesWithStats[0].path);
             fs.unlink(filesWithStats[0].path, () => {
                 console.log('file removed');

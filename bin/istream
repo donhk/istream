@@ -28,6 +28,10 @@ program
       .command("fs_space <path>")
       .alias('fs')
       .description('Shows space used by the videos')
-      .action(fspace.listDir);
+      .action((path) => {
+            setInterval(() => {
+                  fspace.listDir(path);
+            }, 10000)
+      });
 
 program.parse(process.argv);
