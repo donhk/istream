@@ -28,17 +28,25 @@ source .env
 
 # node
 # https://linuxize.com/post/how-to-install-node-js-on-centos-7/
+echo "Installing software dependencies";
 curl -sL https://rpm.nodesource.com/setup_10.x | bash -
 yum install -y nodejs wget sshfs sshpass
+echo "Finished software dependencies install";
+sleep 5
+clear
 
 # ffmpeg 4.2.2
 # https://johnvansickle.com/ffmpeg/
+echo "Installing some tools";
 mkdir tools
 export STREAM_TOOLS=${ISTREAM_HOME}/tools
 wget -O ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz  https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
 tar -c ${STREAM_TOOLS} -xf ${ISTREAM_HOME}/ffmpeg-release-amd64-static.tar.xz 
 rm ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz
 chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
+echo "Finished tools install";
+sleep 5
+clear
 
 #
 # sshfs
