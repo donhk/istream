@@ -69,6 +69,7 @@ ${CMD_IPREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERV
 su - ${LOCAL_USERNAME} <<EOF
 cd ${ISTREAM_HOME}
 npm install
+mkdir -p ${LOCAL_SERVER_DIRECTORY}
 EOF
 npm install -g .
 
