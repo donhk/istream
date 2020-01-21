@@ -4,6 +4,7 @@ const ping = require('../cmds/ping');
 var onvif = require('node-onvif');
 const stream = require('../cmds/start_stream');
 const fspace = require('../cmds/fs_space');
+var PropertiesReader = require('properties-reader');
 
 const logger = winston.createLogger({
     format: winston.format.simple(),
@@ -13,6 +14,7 @@ const logger = winston.createLogger({
     ]
 });
 
+var properties = PropertiesReader('.app.properties');
 const clean_dir_interval = 10000; // seconds
 const max_used_space = 15; // in MB
 const reconnect_interval = 1000; //seconds
