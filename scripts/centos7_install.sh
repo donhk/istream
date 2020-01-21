@@ -60,6 +60,12 @@ else
 fi
 chmod 766 /etc/fuse.conf
 echo "user_allow_other" >> /etc/fuse.conf
+
+su - ${LOCAL_USERNAME} <<EOF
+ssh-keygen -R ${REMOTE_SERVER_ADDRES}
+ssh-keyscan -H ${REMOTE_SERVER_ADDRES} >> ~/.ssh/known_hosts
+EOF
+
 # make sure it is not being used
 fusermount -u ${LOCAL_SERVER_DIRECTORY}
 echo ${CMD_IPREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
