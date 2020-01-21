@@ -31,7 +31,7 @@ source .env
 # https://linuxize.com/post/how-to-install-node-js-on-centos-7/
 echo "Installing software dependencies"
 curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-yum install -y nodejs wget sshfs sshpass
+yum install -y nodejs wget sshfs
 
 #
 # ffmpeg 4.2.2
@@ -56,7 +56,8 @@ export CMD_IPREFIX=
 if [[ "${LOCAL_SERVER_IDENTITY}" != "" ]]; then
     export OPTIONS="${OPTIONS},IdentityFile=${LOCAL_SERVER_IDENTITY}"
 else
-    export CMD_IPREFIX="sshpass -p ${REMOTE_SERVER_PASS}"
+    export OPTIONS="${OPTIONS},password_stdin"
+    export CMD_IPREFIX="echo ${REMOTE_SERVER_PASS} |"
 fi
 chmod 766 /etc/fuse.conf
 echo "user_allow_other" >> /etc/fuse.conf
