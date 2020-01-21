@@ -38,10 +38,11 @@ clear
 # ffmpeg 4.2.2
 # https://johnvansickle.com/ffmpeg/
 echo "Installing some tools";
-mkdir tools
 export STREAM_TOOLS=${ISTREAM_HOME}/tools
+
+mkdir ${STREAM_TOOLS}
 wget -O ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz  https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
-tar -c ${STREAM_TOOLS} -xf ${ISTREAM_HOME}/ffmpeg-release-amd64-static.tar.xz 
+tar -xf ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz -C ${STREAM_TOOLS}/ffmpeg
 rm ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz
 chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
 echo "Finished tools install";
