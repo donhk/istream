@@ -30,9 +30,6 @@ source .env
 echo "Installing software dependencies"
 curl -sL https://rpm.nodesource.com/setup_10.x | bash -
 yum install -y nodejs wget sshfs sshpass
-echo "Finished software dependencies install"
-sleep 5
-clear
 
 #
 # ffmpeg 4.2.2
@@ -40,14 +37,12 @@ clear
 echo "Installing some tools"
 export STREAM_TOOLS=${ISTREAM_HOME}/tools
 
-mkdir ${STREAM_TOOLS}
+rm -rf ${STREAM_TOOLS}/ffmpeg
+mkdir -p ${STREAM_TOOLS}/ffmpeg
 wget -O ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
 tar -xf ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz -C ${STREAM_TOOLS}/ffmpeg
 rm ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz
 chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
-echo "Finished tools install"
-sleep 5
-clear
 
 #
 # sshfs
@@ -55,15 +50,15 @@ clear
 export MUID=$(id -u ${LOCAL_USERNAME})
 export MGID=$(id -g ${LOCAL_USERNAME})
 export OPTIONS="allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID}"
-export PREFIX=
+export CMD_IPREFIX=
 if [[ "${LOCAL_SERVER_IDENTITY}" != "" ]]; then
     export OPTIONS="${OPTIONS},IdentityFile=${LOCAL_SERVER_IDENTITY}"
 else
-    export PREFIX="sshpass -p ${REMOTE_SERVER_PASS}"
+    export CMD_IPREFIX="sshpass -p ${REMOTE_SERVER_PASS}"
 fi
 # make sure it is not being used
 fusermount -u ${LOCAL_SERVER_DIRECTORY}
-${PREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
+${CMD_IPREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
 
 #
 # deploy project
