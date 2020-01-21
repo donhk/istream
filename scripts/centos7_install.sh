@@ -13,6 +13,8 @@ if [[ -f ".env" ]]; then
 else
     echo "Please update and source .env file"
     cp ${ISTREAM_HOME}/.env.src ${ISTREAM_HOME}/.env
+    chown $(logname):$(logname) ${ISTREAM_HOME}/.env
+    chmod 700 ${ISTREAM_HOME}/.env
     cat ${ISTREAM_HOME}/.env
     exit 1
 fi
