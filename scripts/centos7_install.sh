@@ -58,6 +58,7 @@ else
 fi
 # make sure it is not being used
 fusermount -u ${LOCAL_SERVER_DIRECTORY}
+echo ${CMD_IPREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
 ${CMD_IPREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
 
 #
@@ -67,7 +68,7 @@ su - ${LOCAL_USERNAME} <<EOF
 cd ${ISTREAM_HOME}
 npm install
 EOF
-npm install -g istream
+npm install -g .
 
 #
 # create unit
