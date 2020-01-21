@@ -20,7 +20,7 @@ fi
 
 if  [[  $(id -u) -ne 0  ]] ;
 then
-    echo "This script needs to be run as root"
+    echo "This script needs to be run with sudo"
     exit 1;
 fi
 
@@ -53,9 +53,9 @@ clear
 # sshfs
 #
 # sshfs
-export UID=$(id -u ${LOCAL_USERNAME})
-export GID=$(id -g ${LOCAL_USERNAME})
-export OPTIONS="allow_other,default_permissions,reconnect,nonempty,uid=$(UID),gid=$(GID)"
+export MUID=$(id -u ${LOCAL_USERNAME})
+export MGID=$(id -g ${LOCAL_USERNAME})
+export OPTIONS="allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID}"
 export PREFIX=
 if  [[ "${LOCAL_SERVER_IDENTITY}" != "" ]] ;
 then
@@ -70,7 +70,7 @@ ${PREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DI
 #
 # deploy project
 #
-sudo -u ${LOCAL_USERNAME}<<EOF
+su - ${LOCAL_USERNAME}<<EOF
 npm install
 EOF
 npm install -g ./
