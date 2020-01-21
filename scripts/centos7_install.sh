@@ -58,6 +58,8 @@ if [[ "${LOCAL_SERVER_IDENTITY}" != "" ]]; then
 else
     export CMD_IPREFIX="sshpass -p ${REMOTE_SERVER_PASS}"
 fi
+chmod 766 /etc/fuse.conf
+echo "user_allow_other" >> /etc/fuse.conf
 # make sure it is not being used
 fusermount -u ${LOCAL_SERVER_DIRECTORY}
 echo ${CMD_IPREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
