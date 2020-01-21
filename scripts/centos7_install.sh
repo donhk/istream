@@ -1,11 +1,30 @@
-#!/usr/bin/bash
-export ISTREAM_HOME=`pwd`
-if  [[ "$ISTREAM_HOME" == "*script" ]] ;
+#!/bin/bash
+export ISTREAM_HOME=$(pwd)
+
+if  [[ "${ISTREAM_HOME}" == "*scripts" ]] ;
 then
-    export ISTREAM_HOME=$(dirname $ISTREAM_HOME)
+    export ISTREAM_HOME=$(dirname ${ISTREAM_HOME})
 fi
 
-sh validations.sh
+export SCRIPTS_HOME=${ISTREAM_HOME}/scripts
+
+# checking the env file is properly placed
+if [[ -f ".env" ]]; then
+    echo "Configuring environment"
+else 
+    echo "Please update and source .env file"
+    cp ${ISTREAM_HOME}/.env.src ${ISTREAM_HOME}/.env
+    cat ${ISTREAM_HOME}/.env
+    exit 1;
+fi
+
+if  [[  $(id -u) -ne 0  ]] ;
+then
+    echo "This script needs to be run as root"
+    exit 1;
+fi
+
+source .env
 
 # node
 # https://linuxize.com/post/how-to-install-node-js-on-centos-7/
@@ -15,20 +34,34 @@ yum install -y nodejs wget sshfs sshpass
 # ffmpeg 4.2.2
 # https://johnvansickle.com/ffmpeg/
 mkdir tools
-wget -O $(ISTREAM_HOME)/tools/ffmpeg-release-amd64-static.tar.xz  https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
-tar -c $(ISTREAM_HOME)/tools -xf $(ISTREAM_HOME)/tools/ffmpeg-release-amd64-static.tar.xz 
-rm $(ISTREAM_HOME)/tools/ffmpeg-release-amd64-static.tar.xz
-chown -R $(LOCAL_USERNAME):$(LOCAL_USERNAME) $(ISTREAM_HOME)/tools
+export STREAM_TOOLS=${ISTREAM_HOME}/tools
+wget -O ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz  https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+tar -c ${STREAM_TOOLS} -xf ${ISTREAM_HOME}/ffmpeg-release-amd64-static.tar.xz 
+rm ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz
+chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
 
 #
 # sshfs
 #
-sh mount_fs.sh
+# sshfs
+export UID=$(id -u ${LOCAL_USERNAME})
+export GID=$(id -g ${LOCAL_USERNAME})
+export OPTIONS="allow_other,default_permissions,reconnect,nonempty,uid=$(UID),gid=$(GID)"
+export PREFIX=
+if  [[ "${LOCAL_SERVER_IDENTITY}" != "" ]] ;
+then
+    export OPTIONS="${OPTIONS},IdentityFile=${LOCAL_SERVER_IDENTITY}"
+else
+    export PREFIX="sshpass -p ${REMOTE_SERVER_PASS}"
+fi
+# make sure it is not being used
+fusermount -u ${LOCAL_SERVER_DIRECTORY}
+${PREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
 
 #
 # deploy project
 #
-sudo -u $(LOCAL_USERNAME)<<EOF
+sudo -u ${LOCAL_USERNAME}<<EOF
 npm install
 EOF
 npm install -g ./
@@ -42,21 +75,21 @@ sh create_unit.sh
 # creating app properties
 #
 export APP_PROPERTIES=.app.properties
-cat <<EOF >> $(APP_PROPERTIES)
-CAM_USER=$(CAM_USER)
-CAM_PASS=$(CAM_PASS)
-REMOTE_SERVER_ADDRES=$(REMOTE_SERVER_ADDRES)
-REMOTE_SERVER_USER=$(REMOTE_SERVER_USER)
-REMOTE_SERVER_PASS=$(REMOTE_SERVER_PASS)
-REMOTE_SERVER_DIRECTORY=$(REMOTE_SERVER_DIRECTORY)
-AVAILABLE_STORAGE=$(AVAILABLE_STORAGE)
-LOCAL_SERVER_DIRECTORY=$(LOCAL_SERVER_DIRECTORY)
-LOCAL_SERVER_IDENTITY=$(LOCAL_SERVER_IDENTITY)
-LOCAL_USERNAME=$(LOCAL_USERNAME)
-CLEAN_DIR_INTERVAL=$(CLEAN_DIR_INTERVAL)
-MAX_USED_SPACE=$(MAX_USED_SPACE)
-RECONNECT_INTERVAL=$(RECONNECT_INTERVAL)
-SEGMENT_DURATION=$(SEGMENT_DURATION)
+cat <<EOF >> ${APP_PROPERTIES}
+CAM_USER=${CAM_USER}
+CAM_PASS=${CAM_PASS}
+REMOTE_SERVER_ADDRES=${REMOTE_SERVER_ADDRES}
+REMOTE_SERVER_USER=${REMOTE_SERVER_USER}
+REMOTE_SERVER_PASS=${REMOTE_SERVER_PASS}
+REMOTE_SERVER_DIRECTORY=${REMOTE_SERVER_DIRECTORY}
+AVAILABLE_STORAGE=${AVAILABLE_STORAGE}
+LOCAL_SERVER_DIRECTORY=${LOCAL_SERVER_DIRECTORY}
+LOCAL_SERVER_IDENTITY=${LOCAL_SERVER_IDENTITY}
+LOCAL_USERNAME=${LOCAL_USERNAME}
+CLEAN_DIR_INTERVAL=${CLEAN_DIR_INTERVAL}
+MAX_USED_SPACE=${MAX_USED_SPACE}
+RECONNECT_INTERVAL=${RECONNECT_INTERVAL}
+SEGMENT_DURATION=${SEGMENT_DURATION}
 EOF
 
-chmod 700 $(APP_PROPERTIES)
+chmod 700 ${APP_PROPERTIES}

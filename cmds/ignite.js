@@ -1,11 +1,10 @@
-const winston = require('winston');
 var waitUntil = require('wait-until');
-const ping = require('../cmds/ping');
 var onvif = require('node-onvif');
+var propertiesReader = require('properties-reader');
+const winston = require('winston');
+const ping = require('../cmds/ping');
 const stream = require('../cmds/start_stream');
 const fspace = require('../cmds/fs_space');
-var PropertiesReader = require('properties-reader');
-
 const logger = winston.createLogger({
     format: winston.format.simple(),
     transports: [
@@ -14,13 +13,15 @@ const logger = winston.createLogger({
     ]
 });
 
-var properties = PropertiesReader('.app.properties');
-const clean_dir_interval = 10000; // seconds
-const max_used_space = 15; // in MB
-const reconnect_interval = 1000; //seconds
-const segment_duration = 60; // seconds
-const storage_path = '/tmp/temfiles/'; // remote location
-const cam_auth = 'rtsp://admin:frederick27@'; // cam user and pass
+var properties = propertiesReader('.app.properties');
+const clean_dir_interval = 1000 * properties.get('CLEAN_DIR_INTERVAL'); // seconds
+const max_used_space = properties.get('MAX_USED_SPACE'); // in MB
+const reconnect_interval = properties.get('RECONNECT_INTERVAL'); //seconds
+const segment_duration = properties.get('SEGMENT_DURATION'); // seconds
+const storage_path = properties.get('REMOTE_SERVER_DIRECTORY'); // remote location
+const cam_user = properties.get('CAM_USER');
+const cam_pass = properties.get('CAM_PASS');
+const cam_auth = `rtsp://${cam_user}:${cam_pass}@`; // cam user and pass
 
 module.exports = async function () {
     logger.info('checking internet connectivity');
