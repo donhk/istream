@@ -49,16 +49,6 @@ chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
 #
 # sshfs
 #
-export MUID=$(id -u ${LOCAL_USERNAME})
-export MGID=$(id -g ${LOCAL_USERNAME})
-export OPTIONS="allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID}"
-export CMD_IPREFIX=
-if [[ "${LOCAL_SERVER_IDENTITY}" != "" ]]; then
-    export OPTIONS="${OPTIONS},IdentityFile=${LOCAL_SERVER_IDENTITY}"
-else
-    export OPTIONS="${OPTIONS},password_stdin"
-    export CMD_IPREFIX="echo ${REMOTE_SERVER_PASS} |"
-fi
 chmod 766 /etc/fuse.conf
 echo "user_allow_other" >> /etc/fuse.conf
 
@@ -69,8 +59,19 @@ EOF
 
 # make sure it is not being used
 fusermount -u ${LOCAL_SERVER_DIRECTORY}
-echo ${CMD_IPREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
-${CMD_IPREFIX} sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
+
+export MUID=$(id -u ${LOCAL_USERNAME})
+export MGID=$(id -g ${LOCAL_USERNAME})
+export OPTIONS="allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID}"
+export CMD_IPREFIX=
+if [[ "${LOCAL_SERVER_IDENTITY}" != "" ]]; then
+    export OPTIONS="${OPTIONS},IdentityFile=${LOCAL_SERVER_IDENTITY}"
+else
+    export OPTIONS="${OPTIONS},password_stdin"
+    export CMD_IPREFIX="echo ${REMOTE_SERVER_PASS}"
+fi
+
+${CMD_IPREFIX} | sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
 
 #
 # deploy project
