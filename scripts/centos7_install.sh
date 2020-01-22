@@ -42,7 +42,7 @@ export STREAM_TOOLS=${ISTREAM_HOME}/tools
 rm -rf ${STREAM_TOOLS}/ffmpeg
 mkdir -p ${STREAM_TOOLS}/ffmpeg
 wget -O ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
-tar -xf ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz -C ${STREAM_TOOLS}/ffmpeg
+tar -xf ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz -C ${STREAM_TOOLS}/ffmpeg --strip 1
 rm ${STREAM_TOOLS}/ffmpeg-release-amd64-static.tar.xz
 chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
 
@@ -127,6 +127,7 @@ CLEAN_DIR_INTERVAL=${CLEAN_DIR_INTERVAL}
 MAX_USED_SPACE=${MAX_USED_SPACE}
 RECONNECT_INTERVAL=${RECONNECT_INTERVAL}
 SEGMENT_DURATION=${SEGMENT_DURATION}
+FFMPEG_HOME=${STREAM_TOOLS}/ffmpeg
 EOF
 
 chmod 700 ${APP_PROPERTIES}

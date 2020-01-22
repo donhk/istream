@@ -9,9 +9,11 @@ const logger = winston.createLogger({
     ]
 });
 
+const ffmpeg_home = properties.get('FFMPEG_HOME');
+
 async function execute(source, destiny, segment_duration) {
     const cmd = `
-        ffmpeg \
+        ${ffmpeg_home}/ffmpeg \
         -i ${source}\
         -c:v copy \
         -c:a pcm_alaw \
