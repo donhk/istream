@@ -34,4 +34,4 @@ echo "Installing software dependencies"
 curl -sL https://deb.nodesource.com/setup_10.x | bash -
 apt install -y nodejs wget sshfs
 
-sh z_file.sh
+sh ${ISTREAM_HOME}/scripts/z_file.sh
