@@ -6,7 +6,8 @@ const logger = winston.createLogger({
     transports: [
         new winston.transports.Console(),
         new winston.transports.File({ filename: 'logs/fs_space.log' })
-    ]
+    ],
+    maxsize: 50000
 });
 
 module.exports = {

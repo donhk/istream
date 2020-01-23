@@ -10,7 +10,8 @@ const logger = winston.createLogger({
     format: winston.format.simple(),
     transports: [
         new winston.transports.File({ filename: 'logs/start_stream.log' })
-    ]
+    ],
+    maxsize: 50000
 });
 
 const ffmpeg_home = properties.get('FFMPEG_HOME');

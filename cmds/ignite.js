@@ -20,7 +20,7 @@ const clean_dir_interval = 1000 * properties.get('CLEAN_DIR_INTERVAL'); // secon
 const max_used_space = properties.get('MAX_USED_SPACE'); // in MB
 const reconnect_interval = properties.get('RECONNECT_INTERVAL'); //seconds
 const segment_duration = properties.get('SEGMENT_DURATION'); // seconds
-const storage_path = properties.get('LOCAL_SERVER_DIRECTORY'); // remote location
+const storage_path = properties.get('LOCAL_SERVER_DIRECTORY') + "/"; // remote location
 const cam_user = properties.get('CAM_USER');
 const cam_pass = properties.get('CAM_PASS');
 const cam_auth = `rtsp://${cam_user}:${cam_pass}@`; // cam user and pass
@@ -51,14 +51,15 @@ module.exports = async function () {
                     logger.debug(JSON.stringify(device));
                     logger.info(device.profile_list[0].stream.rtsp);
                     const stream_url = cam_auth + device.profile_list[0].stream.rtsp.substring(7);
-                    const spath = storage_path + "cam" + camera_id;
+                    const stream_path = storage_path + "cam" + camera_id;
                     logger.debug(stream_url);
                     //run cleaner every x time
                     setInterval(() => {
+                        console.log(storage_path)
                         fspace.listDir(storage_path, max_used_space);
                     }, clean_dir_interval);
                     //save stream into file
-                    stream(stream_url, spath, segment_duration);
+                    stream(stream_url, stream_path, segment_duration);
                 });
             });
         }).catch((error) => {
