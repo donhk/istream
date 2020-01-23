@@ -9,8 +9,8 @@ Run the install script from the root folder
 
 Fill up the `.env` file with the information and run
 
-    `sudo ./scripts/centos7_install.sh`
-    `sudo ./scripts/raspbian_install.sh`
+    sudo ./scripts/centos7_install.sh
+    sudo ./scripts/raspbian_install.sh
 
 After the install is done you will have
 - A command called `istream`
@@ -18,6 +18,8 @@ After the install is done you will have
 
         sudo systemctl stop istream
         sudo systemctl start istream
+
+- for debugging purposes you can run `istream -h` from which each part of the code can be tested separated
 
 ### TODOs
 - Add module for offline recording and then sync up onto remote server
