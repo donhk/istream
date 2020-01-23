@@ -14,6 +14,21 @@ rm ${STREAM_TOOLS}/${FFMPEG_FILE}
 chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
 
 #
+# ssh passwordless connection
+#
+export SSH_PUB=${HOME}/.ssh/id_rsa
+if [[ -f "${SSH_PUB}" ]]; then
+    echo "id_rsa exists";
+else
+    echo "creating id_rsa";
+    ssh-keygen -f ${HOME}/.ssh/id_rsa -P '' -N '' -q <<< y
+fi
+
+ssh-keyscan -t rsa -H ${REMOTE_SERVER_ADDRES} >> ${HOME}/.ssh/known_hosts
+sshpass -p ${REMOTE_SERVER_PASS} | ssh-copy-id -i ${HOME}/.ssh/id_rsa.pub ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}
+
+export LOCAL_SERVER_IDENTITY=${HOME}/.ssh/id_rsa
+#
 # sshfs
 #
 export FUSE_FILE=/etc/fuse.conf
@@ -34,16 +49,8 @@ fusermount -u ${LOCAL_SERVER_DIRECTORY}
 
 export MUID=$(id -u ${LOCAL_USERNAME})
 export MGID=$(id -g ${LOCAL_USERNAME})
-export OPTIONS="allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID}"
-export CMD_IPREFIX=
-if [[ "${LOCAL_SERVER_IDENTITY}" != "" ]]; then
-    export OPTIONS="${OPTIONS},IdentityFile=${LOCAL_SERVER_IDENTITY}"
-else
-    export OPTIONS="${OPTIONS},password_stdin"
-    export CMD_IPREFIX="echo ${REMOTE_SERVER_PASS}"
-fi
-
-${CMD_IPREFIX} | sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
+export OPTIONS="allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID},IdentityFile=${LOCAL_SERVER_IDENTITY}"
+sshfs ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} -o ${OPTIONS}
 
 #
 # deploy project

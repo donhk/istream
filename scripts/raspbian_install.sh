@@ -32,6 +32,6 @@ source .env
 # https://linuxize.com/post/how-to-install-node-js-on-raspberry-pi/
 echo "Installing software dependencies"
 curl -sL https://deb.nodesource.com/setup_10.x | bash -
-apt install -y nodejs wget sshfs
+apt install -y nodejs wget sshfs sshpass
 
 sh ${ISTREAM_HOME}/scripts/z_file.sh

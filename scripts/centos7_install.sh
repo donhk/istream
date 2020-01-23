@@ -32,6 +32,6 @@ source .env
 # https://linuxize.com/post/how-to-install-node-js-on-centos-7/
 echo "Installing software dependencies"
 curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-yum install -y nodejs wget sshfs
+yum install -y nodejs wget sshfs sshpass
 
 sh ${ISTREAM_HOME}/scripts/z_file.sh
