@@ -1,11 +1,13 @@
 const winston = require('winston');
 const fs = require('fs')
+var path = require('path');
+var appDir = path.dirname(require.main.filename);
 
 const logger = winston.createLogger({
     format: winston.format.simple(),
     transports: [
         new winston.transports.Console(),
-        new winston.transports.File({ filename: 'logs/fs_space.log' })
+        new winston.transports.File({ filename: appDir + '/logs/fs_space.log' })
     ],
     maxsize: 50000
 });

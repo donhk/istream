@@ -9,7 +9,7 @@ const exec = util.promisify(require('child_process').exec);
 const logger = winston.createLogger({
     format: winston.format.simple(),
     transports: [
-        new winston.transports.File({ filename: 'logs/start_stream.log' })
+        new winston.transports.File({ filename: appDir + '/logs/start_stream.log' })
     ],
     maxsize: 50000
 });

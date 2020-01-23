@@ -70,9 +70,11 @@ After=network.target
 [Service]
 Type=simple
 Restart=always
-RestartSec=1
+RestartSec=90
 User=${LOCAL_USERNAME}
 ExecStart=/usr/bin/istream i
+StartLimitInterval=200
+StartLimitBurst=3
 
 [Install]
 WantedBy=multi-user.target
