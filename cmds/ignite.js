@@ -1,6 +1,9 @@
 var waitUntil = require('wait-until');
 var onvif = require('node-onvif');
 var propertiesReader = require('properties-reader');
+var path = require('path');
+var appDir = path.dirname(require.main.filename);
+var properties = propertiesReader(appDir + '/.app.properties');
 const winston = require('winston');
 const ping = require('../cmds/ping');
 const stream = require('../cmds/start_stream');
@@ -13,7 +16,6 @@ const logger = winston.createLogger({
     ]
 });
 
-var properties = propertiesReader('.app.properties');
 const clean_dir_interval = 1000 * properties.get('CLEAN_DIR_INTERVAL'); // seconds
 const max_used_space = properties.get('MAX_USED_SPACE'); // in MB
 const reconnect_interval = properties.get('RECONNECT_INTERVAL'); //seconds

@@ -1,5 +1,9 @@
 const winston = require('winston');
 const util = require('util');
+var propertiesReader = require('properties-reader');
+var path = require('path');
+var appDir = path.dirname(require.main.filename);
+var properties = propertiesReader(appDir + '/.app.properties');
 const exec = util.promisify(require('child_process').exec);
 
 const logger = winston.createLogger({

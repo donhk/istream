@@ -83,7 +83,7 @@ systemctl daemon-reload
 #
 # creating app properties
 #
-export APP_PROPERTIES=.app.properties
+export APP_PROPERTIES=bin/.app.properties
 cat <<EOF >>${APP_PROPERTIES}
 CAM_USER=${CAM_USER}
 CAM_PASS=${CAM_PASS}
