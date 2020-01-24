@@ -71,10 +71,33 @@ fusermount -u ${LOCAL_SERVER_DIRECTORY}
 export FSTAB=/etc/fstab
 export MUID=$(id -u ${LOCAL_USERNAME})
 export MGID=$(id -g ${LOCAL_USERNAME})
-export OPTIONS="noauto,x-systemd.automount,_netdev,allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID},IdentityFile=${LOCAL_SERVER_IDENTITY}"
-echo "sshfs#${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} fuse ${OPTIONS} 0 0" >> ${FSTAB}
+export OPTIONS="x-systemd.automount,_netdev,ServerAliveInterval=30,ServerAliveCountMax=5,allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID},IdentityFile=${LOCAL_SERVER_IDENTITY}"
+#echo "sshfs#${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} fuse ${OPTIONS} 0 0" >> ${FSTAB}
 
-mount -a
+export SERVICE_NAME="${LOCAL_SERVER_DIRECTORY}" | tr / -
+export SERVICE_NAME=${SERVICE_NAME:1}
+export SSTREAM_FILE=/usr/lib/systemd/system/${SERVICE_NAME}.automount
+
+echo ${SSTREAM_FILE};
+
+touch ${SSTREAM_FILE}
+truncate --size 0 ${SSTREAM_FILE}
+
+cat <<EOF >>${SSTREAM_FILE}
+[Unit]
+Description=sstream sshfs for istream
+After=network.target
+
+[Mount]
+What=${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY}
+Where=${LOCAL_SERVER_DIRECTORY}
+Type=fuse.sshfs
+Options=x-systemd.automount,_netdev,ServerAliveInterval=30,ServerAliveCountMax=5,allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID},IdentityFile=${LOCAL_SERVER_IDENTITY}
+TimeoutSec=60
+
+[Install]
+WantedBy=multi-user.target
+EOF
 
 #
 # deploy project
@@ -98,7 +121,7 @@ truncate --size 0 ${UNIT_FILE}
 cat <<EOF >>${UNIT_FILE}
 [Unit]
 Description=istream service
-After=network.target
+After=sstream.mount
 
 [Service]
 Type=simple
