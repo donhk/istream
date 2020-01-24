@@ -28,7 +28,7 @@ else
     ssh-keygen -q -t rsa -N '' -f ${LOCAL_SERVER_IDENTITY} 2>/dev/null <<< y >/dev/null
 fi
 
-if [["" == $(ssh-keygen -H -F ${REMOTE_SERVER_ADDRES})]]; then
+if [[ "" == "$(ssh-keygen -H -F ${REMOTE_SERVER_ADDRES})" ]]; then
     echo 'Adding remote machine to known_hosts';
     ssh-keyscan -t rsa -H ${REMOTE_SERVER_ADDRES} >> ${HOME}/.ssh/known_hosts
 else
