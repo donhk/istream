@@ -67,16 +67,18 @@ fi
 
 # make sure it is not being used
 fusermount -u ${LOCAL_SERVER_DIRECTORY}
-
-export FSTAB=/etc/fstab
+export MAIN_HOME=$(eval echo ~${LOCAL_USERNAME})
+export LOCAL_SERVER_IDENTITY=${MAIN_HOME}/.ssh/id_rsa
 export MUID=$(id -u ${LOCAL_USERNAME})
 export MGID=$(id -g ${LOCAL_USERNAME})
 export OPTIONS="x-systemd.automount,_netdev,ServerAliveInterval=30,ServerAliveCountMax=5,allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID},IdentityFile=${LOCAL_SERVER_IDENTITY}"
+
+#export FSTAB=/etc/fstab
 #echo "sshfs#${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY} ${LOCAL_SERVER_DIRECTORY} fuse ${OPTIONS} 0 0" >> ${FSTAB}
 
-export SERVICE_NAME="${LOCAL_SERVER_DIRECTORY}" | tr / -
+export SERVICE_NAME=$(echo "${LOCAL_SERVER_DIRECTORY}" | tr / -)
 export SERVICE_NAME=${SERVICE_NAME:1}
-export SSTREAM_FILE=/usr/lib/systemd/system/${SERVICE_NAME}.automount
+export SSTREAM_FILE=/usr/lib/systemd/system/${SERVICE_NAME}.mount
 
 echo ${SSTREAM_FILE};
 
@@ -92,7 +94,7 @@ After=network.target
 What=${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}:${REMOTE_SERVER_DIRECTORY}
 Where=${LOCAL_SERVER_DIRECTORY}
 Type=fuse.sshfs
-Options=x-systemd.automount,_netdev,ServerAliveInterval=30,ServerAliveCountMax=5,allow_other,default_permissions,reconnect,nonempty,uid=${MUID},gid=${MGID},IdentityFile=${LOCAL_SERVER_IDENTITY}
+Options=${OPTIONS}
 TimeoutSec=60
 
 [Install]
