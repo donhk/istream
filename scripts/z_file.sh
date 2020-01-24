@@ -20,6 +20,7 @@ chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
 # for root to allow mounting without prompt
 if [[ "" == "$(ssh-keygen -H -F ${REMOTE_SERVER_ADDRES})" ]]; then
     echo 'Adding remote machine to known_hosts for root';
+    mkdir -p ${HOME}/.ssh/
     ssh-keyscan -t rsa -H ${REMOTE_SERVER_ADDRES} >> ${HOME}/.ssh/known_hosts
 else
     echo "remote key already present on root's known_host";
