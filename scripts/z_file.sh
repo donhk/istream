@@ -17,27 +17,27 @@ chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
 #
 # ssh passwordless connection
 #
-export OTHER_USER_HOME=$(eval echo "~${LOCAL_USERNAME}")
-export LOCAL_SERVER_IDENTITY=${OTHER_USER_HOME}/.ssh/id_rsa
+sudo -u ${LOCAL_USERNAME} bash <<'EOF'
 
-su - ${LOCAL_USERNAME}<<EOF
+export LOCAL_SERVER_IDENTITY=${HOME}/.ssh/id_rsa
+
 if [[ -f "${LOCAL_SERVER_IDENTITY}" ]]; then
     echo "id_rsa exists";
 else
     echo "creating id_rsa";
-    ssh-keygen -f ${LOCAL_SERVER_IDENTITY} -P '' -N '' -q <<< y
+    ssh-keygen -q -t rsa -N '' -f ${LOCAL_SERVER_IDENTITY} 2>/dev/null <<< y >/dev/null
 fi
 
 if [["" == $(ssh-keygen -H -F ${REMOTE_SERVER_ADDRES})]]; then
     echo 'Adding remote machine to known_hosts';
-    ssh-keyscan -t rsa -H ${REMOTE_SERVER_ADDRES} >> ${OTHER_USER_HOME}/.ssh/known_hosts
+    ssh-keyscan -t rsa -H ${REMOTE_SERVER_ADDRES} >> ${HOME}/.ssh/known_hosts
 else
     echo 'remote key already present on known_hosts';
 fi
 
 if [[ "yes" == "${CONFIGURE_PASSWORDLESS_SSH}" ]]; then
     echo 'Copying pub key to server';
-    sshpass -p ${REMOTE_SERVER_PASS} | ssh-copy-id -i ${OTHER_USER_HOME}/.ssh/id_rsa.pub ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}
+    sshpass -p ${REMOTE_SERVER_PASS} | ssh-copy-id -i ${HOME}/.ssh/id_rsa.pub ${REMOTE_SERVER_USER}@${REMOTE_SERVER_ADDRES}
 else
      echo 'Assuming passwordless ssh woth server'
 fi
