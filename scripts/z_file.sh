@@ -17,6 +17,15 @@ chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
 #
 # ssh passwordless connection
 #
+# for root to allow mounting without prompt
+if [[ "" == "$(ssh-keygen -H -F ${REMOTE_SERVER_ADDRES})" ]]; then
+    echo 'Adding remote machine to known_hosts for root';
+    ssh-keyscan -t rsa -H ${REMOTE_SERVER_ADDRES} >> ${HOME}/.ssh/known_hosts
+else
+    echo "remote key already present on root's known_host";
+fi
+
+# for non-root to allow mounting without prompt
 tmpfile=$(mktemp)
 cat <<EOT >> ${tmpfile}
 #!/bin/bash
@@ -147,11 +156,11 @@ systemctl daemon-reload
 systemctl enable istream.service
 
 echo "######################################################";
-echo "#                                                     #";
-echo "#   Run the below commands to start the recording     #";
-echo "#   >1 sudo systemctl start ${SERVICE_NAME}.mount     #";
-echo "#   >2 sudo systemctl start ${ISTREAM_SERVICE}        #";
-echo "#                                                     #";
+echo "#                                                     ";
+echo "#   Run the below commands to start the recording     ";
+echo "#   >1  sudo systemctl start ${SERVICE_NAME}.mount    ";
+echo "#   >2  sudo systemctl start ${ISTREAM_SERVICE}       ";
+echo "#                                                     ";
 echo "######################################################";
 
 #
