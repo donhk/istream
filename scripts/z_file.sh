@@ -67,6 +67,7 @@ fi
 
 # make sure it is not being used
 fusermount -u ${LOCAL_SERVER_DIRECTORY}
+
 export MAIN_HOME=$(eval echo ~${LOCAL_USERNAME})
 export LOCAL_SERVER_IDENTITY=${MAIN_HOME}/.ssh/id_rsa
 export MUID=$(id -u ${LOCAL_USERNAME})
@@ -101,6 +102,10 @@ TimeoutSec=60
 WantedBy=multi-user.target
 EOF
 
+systemctl daemon-reload
+systemctl enable ${SERVICE_NAME}.mount
+
+
 #
 # deploy project
 #
@@ -114,8 +119,8 @@ npm install -g .
 #
 # create unit
 #
-
-export UNIT_FILE=/etc/systemd/system/istream.service
+export ISTREAM_SERVICE=istream.service
+export UNIT_FILE=/etc/systemd/system/${ISTREAM_SERVICE}
 
 touch ${UNIT_FILE}
 truncate --size 0 ${UNIT_FILE}
@@ -139,6 +144,15 @@ WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload
+systemctl enable istream.service
+
+echo "######################################################";
+echo "#                                                     #";
+echo "#   Run the below commands to start the recording     #";
+echo "#   >1 sudo systemctl start ${SERVICE_NAME}.mount     #";
+echo "#   >2 sudo systemctl start ${ISTREAM_SERVICE}        #";
+echo "#                                                     #";
+echo "######################################################";
 
 #
 # creating app properties
