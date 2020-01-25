@@ -16,8 +16,8 @@ After the install is done you will have
 - A command called `istream`
 - A new systemd unit for controlling the stream using
 
-        sudo systemctl stop istream
-        sudo systemctl start istream
+        sudo systemctl start ${local-mount-dir}.mount
+        sudo systemctl start istream.service
 
 - for debugging purposes you can run `istream -h` from which each part of the code can be tested separated
 
