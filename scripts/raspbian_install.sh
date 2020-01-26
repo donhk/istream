@@ -1,6 +1,9 @@
 #!/bin/bash
+#
+#  Raspbian GNU/Linux 10 (buster)
+#  4.19.75-v7+ armv7l
+#
 export ISTREAM_HOME=$(pwd)
-export FFMPEG_FILE=ffmpeg-release-arm64-static.tar.xz
 
 if [[ "${ISTREAM_HOME}" == "*scripts" ]]; then
     export ISTREAM_HOME=$(dirname ${ISTREAM_HOME})
@@ -32,7 +35,7 @@ source .env
 # https://linuxize.com/post/how-to-install-node-js-on-raspberry-pi/
 echo "Installing software dependencies"
 curl -sL https://deb.nodesource.com/setup_10.x | bash -
-apt install -y nodejs wget sshfs sshpass
+apt install -y nodejs wget sshfs sshpass ffmpeg
 
 #
 # ffmpeg 4.2.2
@@ -43,9 +46,7 @@ export STREAM_TOOLS=${ISTREAM_HOME}/tools
 
 rm -rf ${STREAM_TOOLS}/ffmpeg
 mkdir -p ${STREAM_TOOLS}/ffmpeg
-wget -O ${STREAM_TOOLS}/${FFMPEG_FILE} https://johnvansickle.com/ffmpeg/releases/${FFMPEG_FILE}
-tar -xf ${STREAM_TOOLS}/${FFMPEG_FILE} -C ${STREAM_TOOLS}/ffmpeg --strip 1
-rm ${STREAM_TOOLS}/${FFMPEG_FILE}
+ln -s $(which ffmpeg) ${STREAM_TOOLS}/ffmpeg/ffmpeg
 chown -R ${LOCAL_USERNAME}:${LOCAL_USERNAME} ${STREAM_TOOLS}
 
 #
