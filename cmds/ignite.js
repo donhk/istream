@@ -1,3 +1,10 @@
+/* ------------------------------------------------------------------
+* istream - ignite.js
+*
+* Copyright (c) 2020 Frederick Alvarez, All rights reserved.
+* Released under the MIT license
+* Date: 2020-01-26
+* ---------------------------------------------------------------- */
 var waitUntil = require('wait-until');
 var onvif = require('node-onvif');
 var propertiesReader = require('properties-reader');
@@ -24,6 +31,8 @@ const storage_path = properties.get('LOCAL_SERVER_DIRECTORY') + "/";
 const cam_user = properties.get('CAM_USER');
 const cam_pass = properties.get('CAM_PASS');
 const cam_auth = `rtsp://${cam_user}:${cam_pass}@`;
+const nic = (properties.get('BROADCAST_NIC') === 'all' || properties.get('BROADCAST_NIC') === null) ? undefined : properties.get('BROADCAST_NIC');
+
 
 module.exports = async function () {
     logger.info('checking internet connectivity');
@@ -36,7 +45,7 @@ module.exports = async function () {
         return internet;
     }, () => {
         logger.info('looking for cameras');
-        onvif.startProbe().then((device_info_list) => {
+        onvif.startProbe({ "bind_address": nic }).then((device_info_list) => {
             logger.info(device_info_list.length + ' devices found');
             if (device_info_list.length > 0) {
                 //run cleaner every x time

@@ -1,4 +1,14 @@
 #!/bin/bash
+#
+#   CentOS Linux release 7.7.1908 (Core)
+#   3.10.0-1062.9.1.el7.x86_64 x86_64
+# ----------------------------------------------------------------
+# istream - centos7_install.sh
+#
+# Copyright (c) 2020 Frederick Alvarez, All rights reserved.
+# Released under the MIT license
+# Date: 2020-01-26
+# ----------------------------------------------------------------
 export ISTREAM_HOME=$(pwd)
 export FFMPEG_FILE=ffmpeg-release-amd64-static.tar.xz
 
@@ -216,6 +226,7 @@ MAX_USED_SPACE=${MAX_USED_SPACE}
 RECONNECT_INTERVAL=${RECONNECT_INTERVAL}
 SEGMENT_DURATION=${SEGMENT_DURATION}
 FFMPEG_HOME=${STREAM_TOOLS}/ffmpeg
+BROADCAST_NIC=${BROADCAST_NIC}
 EOF
 
 chmod 700 ${APP_PROPERTIES}

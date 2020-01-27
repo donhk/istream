@@ -3,6 +3,13 @@
 #  Raspbian GNU/Linux 10 (buster)
 #  4.19.75-v7+ armv7l
 #
+# ----------------------------------------------------------------
+# istream - raspbian_install.sh
+#
+# Copyright (c) 2020 Frederick Alvarez, All rights reserved.
+# Released under the MIT license
+# Date: 2020-01-26
+# ----------------------------------------------------------------
 export ISTREAM_HOME=$(pwd)
 
 if [[ "${ISTREAM_HOME}" == "*scripts" ]]; then
@@ -217,6 +224,7 @@ MAX_USED_SPACE=${MAX_USED_SPACE}
 RECONNECT_INTERVAL=${RECONNECT_INTERVAL}
 SEGMENT_DURATION=${SEGMENT_DURATION}
 FFMPEG_HOME=${STREAM_TOOLS}/ffmpeg
+BROADCAST_NIC=${BROADCAST_NIC}
 EOF
 
 chmod 700 ${APP_PROPERTIES}

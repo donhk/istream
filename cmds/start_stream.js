@@ -1,3 +1,10 @@
+/* ------------------------------------------------------------------
+* istream - start_stream.js
+*
+* Copyright (c) 2020 Frederick Alvarez, All rights reserved.
+* Released under the MIT license
+* Date: 2020-01-26
+* ---------------------------------------------------------------- */
 const winston = require('winston');
 const util = require('util');
 var propertiesReader = require('properties-reader');

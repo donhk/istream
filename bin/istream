@@ -1,11 +1,28 @@
 #!/usr/bin/env node
 
+/* ------------------------------------------------------------------
+* istream - istream.js
+*
+* Copyright (c) 2020 Frederick Alvarez, All rights reserved.
+* Released under the MIT license
+* Date: 2020-01-26
+* ---------------------------------------------------------------- */
+
 const program = require('commander');
 const ping = require('../cmds/ping');
 const find = require('../cmds/find_cameras');
 const ss = require('../cmds/start_stream');
 const fspace = require('../cmds/fs_space');
 const ignite = require('../cmds/ignite');
+const match_ip = require('../cmds/match_ip');
+
+program
+      .command("match_ip <nic>")
+      .alias('mp')
+      .description('Derive the target IP to use')
+      .action((nic) => {
+            console.log(match_ip(nic))
+      });
 
 program
       .command("ping")
