@@ -15,6 +15,7 @@ const winston = require('winston');
 const ping = require('../cmds/ping');
 const stream = require('../cmds/start_stream');
 const fspace = require('../cmds/fs_space');
+const match_ip = require('../cmds/match_ip');
 const logger = winston.createLogger({
     format: winston.format.simple(),
     transports: [
@@ -44,8 +45,14 @@ module.exports = async function () {
         });
         return internet;
     }, () => {
-        logger.info('looking for cameras');
-        onvif.startProbe({ "bind_address": nic }).then((device_info_list) => {
+        let bind_address = undefined;
+        if (nic !== undefined) {
+            bind_address = match_ip(nic);
+            logger.info('looking for cameras on ' + bind_address);
+        } else {
+            logger.info('looking for cameras on 0.0.0.0');
+        }
+        onvif.startProbe({ "bind_address": bind_address }).then((device_info_list) => {
             logger.info(device_info_list.length + ' devices found');
             if (device_info_list.length > 0) {
                 //run cleaner every x time
