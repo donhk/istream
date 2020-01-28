@@ -27,6 +27,8 @@ async function execute(source, destiny, segment_duration) {
     const cmd = `
         ${ffmpeg_home}/ffmpeg \
         -i ${source}\
+        -analyzeduration 120 \
+        -probesize 1024000 \
         -c:v copy \
         -c:a pcm_alaw \
         -flags +global_header \
